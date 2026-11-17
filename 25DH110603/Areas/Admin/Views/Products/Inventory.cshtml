@@ -1,0 +1,8 @@
+@model _25DH110603.Models.ViewModel.InventoryVM
+@{ ViewBag.Title = "Quản lý kho hàng"; Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; }
+<h2>Quản lý kho hàng</h2>
+<p>Đã bán được tính từ tổng số lượng trên các dòng OrderDetail.</p>
+<h3>Danh sách hàng tồn (@Model.InStock.Count)</h3>
+@Html.Partial("_PVInventoryList", Model.InStock)
+<h3>Danh sách hàng cần nhập (@Model.NeedRestock.Count)</h3>
+@Html.Partial("_PVInventoryList", Model.NeedRestock)

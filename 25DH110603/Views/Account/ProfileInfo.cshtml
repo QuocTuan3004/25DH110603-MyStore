@@ -1,0 +1,25 @@
+﻿@model _25DH110603.Models.ViewModel.ProfileVM
+@{ ViewBag.Title = "Thông tin tài khoản"; }
+<section class="page-heading"><p class="eyebrow">TÀI KHOẢN</p><h1>Thông tin cá nhân</h1></section>
+@if (TempData["Message"] != null) { <div class="alert alert-success">@TempData["Message"]</div> }
+@if (TempData["PasswordError"] != null) { <div class="alert alert-danger">@TempData["PasswordError"]</div> }
+<div class="profile-grid"><section class="form-card profile-card"><h2>Cập nhật thông tin</h2><p><strong>Tên đăng nhập:</strong> @Model.Username</p>
+@using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken() @Html.HiddenFor(m => m.Username)
+    <div class="form-group">@Html.LabelFor(m => m.CustomerName) @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control" }) @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text-danger" })</div>
+    <div class="form-group">@Html.LabelFor(m => m.CustomerPhone) @Html.TextBoxFor(m => m.CustomerPhone, new { @class = "form-control" }) @Html.ValidationMessageFor(m => m.CustomerPhone, "", new { @class = "text-danger" })</div>
+    <div class="form-group">@Html.LabelFor(m => m.CustomerEmail) @Html.TextBoxFor(m => m.CustomerEmail, new { @class = "form-control" })</div>
+    <div class="form-group">@Html.LabelFor(m => m.CustomerAddress) @Html.TextBoxFor(m => m.CustomerAddress, new { @class = "form-control" })</div>
+    <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
+}
+</section><section class="form-card profile-card"><h2>Đổi mật khẩu</h2>
+@using (Html.BeginForm("ChangePassword", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken() @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group"><label for="CurrentPassword">Mật khẩu hiện tại</label><input id="CurrentPassword" name="CurrentPassword" type="password" class="form-control" required /></div>
+    <div class="form-group"><label for="NewPassword">Mật khẩu mới</label><input id="NewPassword" name="NewPassword" type="password" class="form-control" minlength="6" required /></div>
+    <div class="form-group"><label for="ConfirmPassword">Xác nhận mật khẩu mới</label><input id="ConfirmPassword" name="ConfirmPassword" type="password" class="form-control" required /></div>
+    <button class="btn btn-outline-primary" type="submit">Đổi mật khẩu</button>
+}
+</section></div>

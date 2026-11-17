@@ -1,0 +1,7 @@
+@model _25DH110603.Models.Customer
+@{ ViewBag.Title = "Chi tiết khách hàng"; Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; }
+<h2>Thông tin khách hàng</h2>
+<dl class="row"><dt class="col-sm-3">Tên</dt><dd class="col-sm-9">@Model.CustomerName</dd><dt class="col-sm-3">Tài khoản</dt><dd class="col-sm-9">@Model.Username</dd><dt class="col-sm-3">Điện thoại</dt><dd class="col-sm-9">@Model.CustomerPhone</dd><dt class="col-sm-3">Email</dt><dd class="col-sm-9">@Model.CustomerEmail</dd><dt class="col-sm-3">Địa chỉ</dt><dd class="col-sm-9">@Model.CustomerAddress</dd></dl>
+<h3>Đơn hàng của khách</h3>
+@Html.Partial("~/Areas/Admin/Views/Orders/_PVListOrders.cshtml", Model.Orders.OrderByDescending(o => o.OrderDate))
+@Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })

@@ -1,0 +1,4 @@
+@model IEnumerable<_25DH110603.Models.Order>
+@{ ViewBag.Title = "Đơn hàng"; Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; }
+<h2>Danh sách đơn hàng</h2>
+@Html.Partial("_PVListOrders", Model)

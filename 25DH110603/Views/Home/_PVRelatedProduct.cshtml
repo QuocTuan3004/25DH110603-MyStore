@@ -1,0 +1,7 @@
+@model IEnumerable<_25DH110603.Models.Product>
+<div class="product-grid related-grid">
+@foreach (var product in Model)
+{
+    <article class="product-card"><a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductID })" class="product-image-wrap"><img src="@(Url.Content(String.IsNullOrWhiteSpace(product.ProductImage) ? "~/Content/no-image.png" : product.ProductImage))" alt="@product.ProductName" /></a><div class="product-card-body"><h3>@Html.ActionLink(product.ProductName, "ProductDetail", "Home", new { id = product.ProductID }, null)</h3><strong>@product.ProductPrice.ToString("N0") ₫</strong></div></article>
+}
+</div>

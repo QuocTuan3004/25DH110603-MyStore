@@ -1,0 +1,16 @@
+@model PagedList.IPagedList<_25DH110603.Models.Product>
+<div class="product-grid">
+@foreach (var product in Model)
+{
+    <article class="product-card">
+        <a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductID })" class="product-image-wrap">
+            <img src="@(Url.Content(String.IsNullOrWhiteSpace(product.ProductImage) ? "~/Content/no-image.png" : product.ProductImage))" alt="@product.ProductName" />
+        </a>
+        <div class="product-card-body"><span class="product-category">@(product.Category == null ? "Sản phẩm" : product.Category.CategoryName)</span>
+            <h3>@Html.ActionLink(product.ProductName, "ProductDetail", "Home", new { id = product.ProductID }, null)</h3>
+            <div class="product-card-bottom"><strong>@product.ProductPrice.ToString("N0") ₫</strong>@Html.ActionLink("Chi tiết", "ProductDetail", "Home", new { id = product.ProductID }, new { @class = "text-link" })</div>
+        </div>
+    </article>
+}
+</div>
+@if (!Model.Any()) { <p class="empty-state">Không tìm thấy sản phẩm nào.</p> }

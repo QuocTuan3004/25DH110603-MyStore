@@ -1,4 +1,4 @@
-﻿@model _25DH110603.Models.Product
+@model _25DH110603.Models.Product
 
 <head>
     <style>
@@ -35,7 +35,7 @@
 <div class="form-group">
     <div class="control-label col-md-2">Mô tả</div>
     <div class="col-md-10">
-        @Html.TextAreaFor(model => model.ProductDescription, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.TextAreaFor(model => model.ProductDescription, new { @class = "form-control", rows = 5 })
         @Html.ValidationMessageFor(model => model.ProductDescription, "", new { @class = "text-danger" })
     </div>
 </div>
@@ -49,10 +49,22 @@
 </div>
 
 <div class="form-group">
-    <div class="control-label col-md-2">Hình ảnh</div>
+    <div class="control-label col-md-2">Số lượng tồn</div>
     <div class="col-md-10">
-        @Html.EditorFor(model => model.ProductImage, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.ProductImage, "", new { @class = "text-danger" })
+        @Html.TextBoxFor(model => model.Quantity, new { @class = "form-control", type = "number", min = "0" })
+        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="control-label col-md-2">Ảnh sản phẩm</div>
+    <div class="col-md-10">
+        @if (!String.IsNullOrWhiteSpace(Model == null ? null : Model.ProductImage)) { <img src="@Url.Content(Model.ProductImage)" alt="Ảnh sản phẩm hiện tại" style="max-width:160px;max-height:120px;margin-bottom:8px" /> }
+        @Html.Label("ImageUrl", "Dán link ảnh", new { @class = "control-label" })
+        @Html.TextBox("ImageUrl", Model == null || !Uri.IsWellFormedUriString(Model.ProductImage, UriKind.Absolute) ? "" : Model.ProductImage, new { @class = "form-control", type = "url", placeholder = "https://example.com/anh-san-pham.jpg" })
+        @Html.ValidationMessage("ImageUrl", "", new { @class = "text-danger" })
+        <small>Dán link ảnh trực tiếp (http/https), hoặc chọn file bên dưới. Nếu chọn cả hai, file được ưu tiên.</small>
+        <input type="file" name="ImageFile" accept="image/jpeg,image/png,image/gif,image/webp" class="form-control" />
+        <small>JPG, PNG, GIF hoặc WEBP; tối đa 5 MB. Khi sửa, để trống cả hai để giữ ảnh hiện tại.</small>
     </div>
 </div>
 

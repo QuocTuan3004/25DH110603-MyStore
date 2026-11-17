@@ -1,0 +1,30 @@
+﻿@model _25DH110603.Models.ViewModel.Cart
+@{ ViewBag.Title = "Giỏ hàng"; }
+@if (TempData["CartError"] != null) { <div class="alert alert-warning">@TempData["CartError"]</div> }
+<section class="page-heading"><p class="eyebrow">ĐƠN HÀNG CỦA BẠN</p><h1>Giỏ hàng</h1></section>
+@if (!Model.Items.Any())
+{
+    <div class="empty-state"><p>Giỏ hàng đang trống.</p>@Html.ActionLink("Tiếp tục mua hàng", "Index", "Home", null, new { @class = "btn btn-primary" })</div>
+}
+else
+{
+    <div class="cart-layout"><div class="cart-items">
+        @foreach (var group in Model.GroupedItems)
+        {
+            <h2 class="cart-category">@group.Key</h2>
+            foreach (var item in group)
+            {
+                <article class="cart-item">
+                    <img src="@(String.IsNullOrWhiteSpace(item.ProductImage) ? Url.Content("~/Content/no-image.png") : item.ProductImage)" alt="@item.ProductName" />
+                    <div class="cart-item-info"><h3>@item.ProductName</h3><span>@item.UnitPrice.ToString("N0") ₫ / sản phẩm</span></div>
+                    @using (Html.BeginForm("UpdateQuantity", "Cart", FormMethod.Post, new { @class = "cart-quantity" }))
+                    { @Html.AntiForgeryToken()<input type="hidden" name="productId" value="@item.ProductID" /><input class="form-control" type="number" min="1" name="quantity" value="@item.Quantity" max="@item.StockQuantity" aria-label="Số lượng" /><button class="btn btn-outline-secondary" type="submit">Cập nhật</button> }
+                    <strong class="cart-line-total">@item.LineTotal.ToString("N0") ₫</strong>
+                    @using (Html.BeginForm("RemoveItem", "Cart", FormMethod.Post))
+                    { @Html.AntiForgeryToken()<input type="hidden" name="productId" value="@item.ProductID" /><button class="btn btn-link text-danger" type="submit">Xóa</button> }
+                </article>
+            }
+        }
+        @using (Html.BeginForm("ClearCart", "Cart", FormMethod.Post)) { @Html.AntiForgeryToken()<button class="btn btn-link text-danger" type="submit">Xóa toàn bộ giỏ hàng</button> }
+    </div><aside class="cart-summary"><h2>Tóm tắt đơn hàng</h2><div class="summary-row"><span>Số mặt hàng</span><span>@Model.Count</span></div><div class="summary-row summary-total"><span>Tạm tính</span><strong>@Model.Total.ToString("N0") ₫</strong></div>@Html.ActionLink("Tiến hành thanh toán", "Checkout", "Order", null, new { @class = "btn btn-primary btn-block" })@Html.ActionLink("Tiếp tục mua hàng", "Index", "Home", null, new { @class = "btn btn-link btn-block" })</aside></div>
+}

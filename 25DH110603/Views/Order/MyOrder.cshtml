@@ -1,0 +1,13 @@
+﻿@model IEnumerable<_25DH110603.Models.Order>
+@{ ViewBag.Title = "Lịch sử mua hàng"; }
+<section class="page-heading"><p class="eyebrow">TÀI KHOẢN</p><h1>Lịch sử mua hàng</h1></section>
+@using (Html.BeginForm("MyOrder", "Order", FormMethod.Get, new { @class = "search-form compact-search" }))
+{ @Html.TextBox("searchTerm", (string)ViewBag.SearchTerm, new { @class = "form-control", placeholder = "Tìm mã đơn hoặc tên sản phẩm" })<button class="btn btn-primary" type="submit">Tìm đơn hàng</button> }
+@if (!Model.Any()) { <p class="empty-state">Chưa có đơn hàng phù hợp.</p> }
+@foreach (var order in Model)
+{
+    <article class="form-card order-history-card"><div class="order-history-heading"><div><span class="eyebrow">ĐƠN HÀNG #@order.OrderID</span><p>Ngày đặt @order.OrderDate.ToString("dd/MM/yyyy") · @order.PaymentStatus</p></div><strong>@order.TotalAmount.ToString("N0") ₫</strong></div>
+        <ul class="order-product-list">@foreach (var detail in order.OrderDetails) { <li>@detail.Product.ProductName <span>× @detail.Quantity</span></li> }</ul>
+        @Html.ActionLink("Xem chi tiết", "OrderSuccess", new { id = order.OrderID }, new { @class = "text-link" })
+    </article>
+}

@@ -1,0 +1,22 @@
+﻿@model _25DH110603.Models.ViewModel.PersonalMenuVM
+<div class="personal-links">
+    @Html.ActionLink("Trang chủ", "Index", "Home", null, new { @class = "nav-button" })
+    <div class="dropdown">
+        <button class="nav-button" type="button" data-bs-toggle="dropdown">@(Model.IsLoggedIn ? "Xin chào, " + Model.Username : "Tài khoản") <span aria-hidden="true">▾</span></button>
+        <div class="dropdown-menu dropdown-menu-end">
+            @if (Model.IsLoggedIn)
+            {
+                @Html.ActionLink("Thông tin tài khoản", "ProfileInfo", "Account", null, new { @class = "dropdown-item" })
+                @Html.ActionLink("Lịch sử mua hàng", "MyOrder", "Order", null, new { @class = "dropdown-item" })
+                using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { @class = "px-3 py-1" }))
+                { @Html.AntiForgeryToken()<button type="submit" class="dropdown-item">Đăng xuất</button> }
+            }
+            else
+            {
+                @Html.ActionLink("Đăng ký", "Register", "Account", null, new { @class = "dropdown-item" })
+                @Html.ActionLink("Đăng nhập", "Login", "Account", null, new { @class = "dropdown-item" })
+            }
+        </div>
+    </div>
+    @Html.ActionLink("Giỏ hàng (" + Model.CartCount + ")", "Index", "Cart", null, new { @class = "nav-button cart-link" })
+</div>

@@ -1,0 +1,6 @@
+﻿@model _25DH110603.Models.Order
+@{ ViewBag.Title = "Đặt hàng thành công"; }
+<section class="success-panel"><p class="success-mark">✓</p><p class="eyebrow">ĐÃ GHI NHẬN</p><h1>Cảm ơn bạn đã đặt hàng</h1><p>Đơn hàng <strong>#@Model.OrderID</strong> đã được tạo.</p></section>
+<section class="form-card order-card"><h2>Thông tin đơn hàng</h2><div class="order-meta"><span>Ngày đặt: @Model.OrderDate.ToString("dd/MM/yyyy")</span><span>Trạng thái thanh toán: @Model.PaymentStatus</span><span>Hình thức giao hàng: @Model.DeliveryMethod</span><span>Hình thức thanh toán: @Model.PaymentMethod</span><span>Địa chỉ giao hàng: @Model.ShippingAddress</span></div>
+@Html.Partial("_PVOrderDetailList", Model.OrderDetails)<div class="summary-row summary-total"><span>Tổng thanh toán</span><strong>@Model.TotalAmount.ToString("N0") ₫</strong></div>
+@Html.ActionLink("Xem lịch sử mua hàng", "MyOrder", null, new { @class = "btn btn-outline-primary" }) @Html.ActionLink("Tiếp tục mua sắm", "Index", "Home", null, new { @class = "btn btn-primary" })</section>

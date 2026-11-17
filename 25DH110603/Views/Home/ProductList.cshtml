@@ -1,0 +1,15 @@
+﻿@model PagedList.IPagedList<_25DH110603.Models.Product>
+@using PagedList.Mvc
+@{ ViewBag.Title = ViewBag.Category == null ? "Danh sách sản phẩm" : ViewBag.Category.CategoryName; }
+<section class="product-section">
+    <p class="eyebrow">DANH MỤC</p><h1>@ViewBag.Title</h1>
+    @using (Html.BeginForm("ProductList", "Home", FormMethod.Get, new { @class = "search-form compact-search" }))
+    {
+        if (ViewBag.Category != null) { <input type="hidden" name="id" value="@ViewBag.Category.CategoryID" /> }
+        @Html.TextBox("searchTerm", (string)ViewBag.SearchTerm, new { @class = "form-control", placeholder = "Tìm trong danh mục" })
+        <select class="form-control sort-select" name="sortOrder"><option value="name">Tên A–Z</option><option value="price" @(ViewBag.SortOrder == "price" ? "selected" : "")>Giá thấp đến cao</option></select>
+        <button class="btn btn-primary" type="submit">Lọc</button>
+    }
+    @Html.Partial("_PVNewProduct", Model)
+    @Html.PagedListPager(Model, page => Url.Action("ProductList", new { id = ViewBag.Category == null ? (int?)null : (int?)ViewBag.Category.CategoryID, searchTerm = ViewBag.SearchTerm, sortOrder = ViewBag.SortOrder, page }))
+</section>

@@ -17,12 +17,12 @@
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home"),</li>
-                    <li>@Html.ActionLink("Danh mục", "Index", "Categories")</li>
-                    <li>@Html.ActionLink("Sản phẩm", "Index", "Product")</li>
-                    <li>@Html.ActionLink("Khách hàng", "Index", "Custumers")</li>
-                    <li>@Html.ActionLink("Đơn hàng", "Index", "Oders")</li>
-                    <li>@Html.ActionLink("Tài khoản", "Index", "Users")</li> 
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Quản lý danh mục</a><ul class="dropdown-menu"><li>@Html.ActionLink("Danh sách danh mục", "Index", "Categories", new { area = "Admin" }, new { @class = "dropdown-item" })</li><li>@Html.ActionLink("Thêm danh mục", "Create", "Categories", new { area = "Admin" }, new { @class = "dropdown-item" })</li></ul></li>
+                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Quản lý hàng hóa</a><ul class="dropdown-menu"><li>@Html.ActionLink("Danh sách sản phẩm", "Index", "Products", new { area = "Admin" }, new { @class = "dropdown-item" })</li><li>@Html.ActionLink("Thêm sản phẩm", "Create", "Products", new { area = "Admin" }, new { @class = "dropdown-item" })</li><li>@Html.ActionLink("Quản lý kho hàng", "Inventory", "Products", new { area = "Admin" }, new { @class = "dropdown-item" })</li></ul></li>
+                    <li>@Html.ActionLink("Khách hàng", "Index", "Customers", new { area = "Admin" }, null)</li>
+                    <li>@Html.ActionLink("Đơn hàng", "Index", "Orders", new { area = "Admin" }, null)</li>
+                    <li>@Html.ActionLink("Tài khoản", "Index", "Users", new { area = "Admin" }, null)</li>
                 </ul>
             </div>
         </div>

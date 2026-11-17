@@ -18,7 +18,7 @@ namespace _25DH110603.Areas.Admin.Controllers
         // GET: Lâyd duữ liệu từ bảng Category trong DB để hiển thị lên 
         public ActionResult Index()
         {
-            return View(db.Categories.ToList());
+            return View(db.Categories.Include(c => c.Products).OrderBy(c => c.CategoryName).ToList());
         }
 
         // GET: Admin/Categories/Details/5
@@ -29,7 +29,7 @@ namespace _25DH110603.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);// mã lỗi 400: thiếu giá trị chuyền vào 
             }
-            Category category = db.Categories.Find(id);
+            Category category = db.Categories.Include(c => c.Products).FirstOrDefault(c => c.CategoryID == id.Value);
             if (category == null)// không tìm thấy bản ghi nào 
             {
                 return HttpNotFound();// mã lỗi 404 
@@ -99,17 +99,20 @@ namespace _25DH110603.Areas.Admin.Controllers
         // GET: Admin/Categories/Delete/5
         public ActionResult Delete(int? id)
         {
-            return Details(id);
-            //if (id == null)
-            //{
-            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            //}
-            //Category category = db.Categories.Find(id);
-            //if (category == null)
-            //{
-            //    return HttpNotFound();
-            //}
-            //return View(category);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var category = db.Categories.Include(c => c.Products)
+                .FirstOrDefault(c => c.CategoryID == id.Value);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.ProductCount = category.Products.Count;
+            return View(category);
         }
 
         // POST: Admin/Categories/Delete/5
@@ -117,10 +120,31 @@ namespace _25DH110603.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Category category = db.Categories.Find(id);
-            db.Categories.Remove(category);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            var category = db.Categories.Include(c => c.Products)
+                .FirstOrDefault(c => c.CategoryID == id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.ProductCount = category.Products.Count;
+            if (category.Products.Any())
+            {
+                ModelState.AddModelError("", "Không thể xóa danh mục khi vẫn còn sản phẩm thuộc danh mục này. Hãy xóa hoặc chuyển các sản phẩm trước.");
+                return View("Delete", category);
+            }
+
+            try
+            {
+                db.Categories.Remove(category);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (System.Data.Entity.Infrastructure.DbUpdateException)
+            {
+                ModelState.AddModelError("", "Không thể xóa danh mục vì dữ liệu khác vẫn đang sử dụng danh mục này.");
+                return View("Delete", category);
+            }
         }
 
         protected override void Dispose(bool disposing)

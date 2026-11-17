@@ -1,0 +1,6 @@
+@model _25DH110603.Models.Product
+    <p class="eyebrow">@(Model.Category == null ? "SẢN PHẨM" : Model.Category.CategoryName)</p>
+    <h1>@Model.ProductName</h1>
+    <p class="detail-price">@Model.ProductPrice.ToString("N0") ₫</p>
+    <p class="detail-description">@Model.ProductDescription</p>
+<p class="stock-count">Còn lại: @Model.Quantity</p>

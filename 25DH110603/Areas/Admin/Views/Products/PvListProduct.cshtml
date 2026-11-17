@@ -1,4 +1,4 @@
-﻿@model _25DH110603.Models.ViewModel.ProductSearchVM
+@model _25DH110603.Models.ViewModel.ProductSearchVM
 @using PagedList.Mvc;
 <head>
     <style>
@@ -20,6 +20,7 @@
                 <th class="bg-success col-md-2">Hình ảnh</th>
                 <th class="bg-success col-md-2">Tên sản phẩm </th>
                 <th class="bg-success col-md-1">Đơn giá</th>
+                <th class="bg-success col-md-1">Tồn kho</th>
                 <th class="bg-success col-md-2">Danh mục</th>
                 <th class="bg-success col-md-4"></th>
             </tr>
@@ -28,9 +29,10 @@
             @foreach (var item in Model.Products)
             {
                 <tr>
-                    <td><img src="@Html.DisplayFor(modelItem => item.ProductImage)" /></td>
+                    <td><img src="@Url.Content(String.IsNullOrWhiteSpace(item.ProductImage) ? "~/Content/no-image.png" : item.ProductImage)" alt="@item.ProductName" style="max-width:100px;max-height:80px;object-fit:cover" /></td>
                     <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
                     <td>@Html.DisplayFor(modelItem => item.ProductPrice)</td>
+                    <td>@item.Quantity</td>
                     <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
                     <td>
                         @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-primary btn-sm" })

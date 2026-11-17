@@ -1,0 +1,5 @@
+@model IEnumerable<_25DH110603.Models.Order>
+@if (!Model.Any()) { <p>Chưa có đơn hàng.</p> }
+else { <table class="table table-striped"><thead><tr><th>Mã đơn</th><th>Ngày đặt</th><th>Khách hàng</th><th>Tổng tiền</th><th></th></tr></thead><tbody>
+@foreach (var item in Model) { <tr><td>#@item.OrderID</td><td>@item.OrderDate.ToString("dd/MM/yyyy")</td><td>@(item.Customer == null ? "" : item.Customer.CustomerName)</td><td>@item.TotalAmount.ToString("N0") ₫</td><td>@Html.ActionLink("Chi tiết", "Details", "Orders", new { area = "Admin", id = item.OrderID }, new { @class = "btn btn-outline-primary btn-sm" })</td></tr> }
+</tbody></table> }

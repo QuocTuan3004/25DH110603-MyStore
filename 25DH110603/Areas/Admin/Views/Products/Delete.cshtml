@@ -8,9 +8,14 @@
 <h2 class="bg-success">Xóa sản phẩm?</h2>
 
 <div>Bạn thực sự muốn xóa sản phẩm này?</div>
+@Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
 @Html.Partial("PVInfoProduct", Model)
 <div style="padding:10px">
-    @Html.ActionLink("Sửa", "Delete", new { id = Model.ProductID }, new { @class = "btn btn-primary btn-sm" })
-    @Html.ActionLink("Quay lại danh sách ", "Index", null, new { @class = "btn btn-primary btn-sm" })
+    @using (Html.BeginForm("Delete", "Products", new { id = Model.ProductID }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-primary btn-sm">Xóa</button>
+        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary btn-sm" })
+    }
 </div>

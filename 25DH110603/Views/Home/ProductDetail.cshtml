@@ -1,0 +1,21 @@
+﻿@model _25DH110603.Models.ViewModel.ProductDetailVM
+@using PagedList.Mvc
+@{ ViewBag.Title = Model.Product.ProductName; }
+<div class="detail-layout">
+    <div class="detail-image"><img src="@(String.IsNullOrWhiteSpace(Model.Product.ProductImage) ? Url.Content("~/Content/no-image.png") : Url.Content(Model.Product.ProductImage))" alt="@Model.Product.ProductName" /></div>
+    <section class="detail-info">
+        @Html.Partial("_PVProductInfo", Model.Product)
+        @if (Model.Product.Quantity > 0)
+        {
+        using (Html.BeginForm("AddItem", "Cart", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()<input type="hidden" name="productId" value="@Model.Product.ProductID" />
+            <label for="quantity">Số lượng</label><input id="quantity" class="form-control quantity-input" type="number" min="1" name="quantity" value="@Model.Quantity" />
+            <button class="btn btn-primary btn-lg" type="submit">Thêm vào giỏ hàng</button>
+        }
+        }
+        else { <p class="text-danger">Sản phẩm hiện đã hết hàng.</p> }
+    </section>
+</div>
+<section class="product-section"><div class="section-heading"><h2>Sản phẩm cùng danh mục</h2></div>@Html.Partial("_PVRelatedProduct", Model.RelatedProducts)</section>
+<section class="product-section"><div class="section-heading"><h2>Sản phẩm bán chạy trong danh mục</h2></div>@Html.Partial("_PVRelatedProduct", Model.TopProducts)<div class="pager-wrap">@Html.PagedListPager(Model.TopProducts, page => Url.Action("ProductDetail", new { id = Model.Product.ProductID, quantity = Model.Quantity, page }))</div></section>

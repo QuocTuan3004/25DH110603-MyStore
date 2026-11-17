@@ -1,0 +1,4 @@
+@model IEnumerable<_25DH110603.Models.Product>
+<table class="table table-striped"><thead><tr><th>Sản phẩm</th><th>Danh mục</th><th>Tồn kho</th><th>Đã bán</th><th></th></tr></thead><tbody>
+@foreach (var item in Model) { <tr><td>@item.ProductName</td><td>@(item.Category == null ? "" : item.Category.CategoryName)</td><td>@item.Quantity</td><td>@item.OrderDetails.Sum(d => d.Quantity)</td><td>@Html.ActionLink("Cập nhật", "Edit", new { id = item.ProductID }, new { @class = "btn btn-primary btn-sm" })</td></tr> }
+</tbody></table>

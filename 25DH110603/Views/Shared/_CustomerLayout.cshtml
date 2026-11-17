@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title - MyStore</title>
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/myStyle/CustomerHome.css" rel="stylesheet" />
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <header class="store-header">
+        <div class="container store-nav">
+            @Html.ActionLink("MyStore", "Index", "Home", null, new { @class = "store-brand" })
+            <nav class="category-nav">@Html.Action("CategoryMenu", "Home")</nav>
+            <div class="personal-nav">@Html.Action("PersonalMenu", "Home")</div>
+        </div>
+    </header>
+    <main class="container store-main">@RenderBody()</main>
+    <footer class="store-footer"><div class="container">MyStore · Website bán hàng ASP.NET MVC 5</div></footer>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

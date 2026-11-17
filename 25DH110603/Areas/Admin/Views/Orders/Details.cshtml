@@ -1,0 +1,7 @@
+@model _25DH110603.Models.Order
+@{ ViewBag.Title = "Chi tiết đơn hàng"; Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; }
+<h2>Hóa đơn đơn hàng #@Model.OrderID</h2>
+<section class="card p-3 mb-3"><div>Khách hàng: @Model.Customer.CustomerName</div><div>Ngày đặt: @Model.OrderDate.ToString("dd/MM/yyyy")</div><div>Địa chỉ giao hàng: @Model.ShippingAddress</div><div>Giao hàng: @Model.DeliveryMethod</div><div>Thanh toán: @Model.PaymentMethod · @Model.PaymentStatus</div></section>
+@Html.Partial("~/Views/Order/_PVOrderDetailList.cshtml", Model.OrderDetails)
+<p class="text-end"><strong>Tổng thanh toán: @Model.TotalAmount.ToString("N0") ₫</strong></p>
+@Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })

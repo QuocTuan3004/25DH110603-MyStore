@@ -1,0 +1,10 @@
+﻿@model IEnumerable<_25DH110603.Models.Category>
+<div class="dropdown">
+    <button class="nav-button" type="button" data-bs-toggle="dropdown">Danh mục <span aria-hidden="true">▾</span></button>
+    <div class="dropdown-menu">
+        @foreach (var category in Model)
+        {
+            @Html.ActionLink(category.CategoryName, "ProductList", "Home", new { id = category.CategoryID }, new { @class = "dropdown-item" })
+        }
+    </div>
+</div>

@@ -1,33 +1,23 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model _25DH110603.Models.ViewModel.HomeProductVM
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Trang chủ";
 }
-
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
-
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
-    </div>
-</main>
+<section class="hero-panel">
+    <div><p class="eyebrow">MY STORE</p><h1 class="hero-title">1 ngày dài mệt mỏi? hãy xem phim <span class="hero-highlight">ngay.</span></h1></div>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "search-form" }))
+    {
+        @Html.TextBox("searchTerm", Model.SearchTerm, new { @class = "form-control", placeholder = "Tìm theo tên, mô tả hoặc danh mục…", aria_label = "Tìm sản phẩm" })
+        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+    }
+</section>
+@if (TempData["Message"] != null) { <div class="alert alert-success">@TempData["Message"]</div> }
+<section class="product-section">
+    <div class="section-heading"><div><p class="eyebrow">ĐƯỢC QUAN TÂM</p><h2>Sản phẩm nổi bật</h2></div></div>
+    @Html.Partial("_PVFeatureProduct", Model.FeaturedProducts)
+</section>
+<section class="product-section">
+    <div class="section-heading"><div><p class="eyebrow">GỢI Ý CHO BẠN</p><h2>@(String.IsNullOrWhiteSpace(Model.SearchTerm) ? "Sản phẩm mới" : "Kết quả tìm kiếm")</h2></div><span>@Model.NewestProducts.TotalItemCount sản phẩm</span></div>
+    @Html.Partial("_PVNewProduct", Model.NewestProducts)
+    @Html.PagedListPager(Model.NewestProducts, page => Url.Action("Index", new { searchTerm = Model.SearchTerm, page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+</section>

@@ -14,6 +14,7 @@ using PagedList;
 
 namespace _25DH110603.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class ProductsController : Controller
     {
         private MyStoreEntities db = new MyStoreEntities();

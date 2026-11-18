@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace _25DH110603.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class HomeController : Controller
     {
         // GET: Admin/Home

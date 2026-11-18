@@ -5,7 +5,7 @@ using System.Web.Mvc;
 using _25DH110603.Models;
 namespace _25DH110603.Areas.Admin.Controllers
 {
-    [Authorize]
+    [AdminAuthorize]
     public class CustomersController : Controller
     {
         private readonly MyStoreEntities db = new MyStoreEntities();

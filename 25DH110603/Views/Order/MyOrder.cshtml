@@ -1,13 +1,72 @@
-﻿@model IEnumerable<_25DH110603.Models.Order>
-@{ ViewBag.Title = "Lịch sử mua hàng"; }
-<section class="page-heading"><p class="eyebrow">TÀI KHOẢN</p><h1>Lịch sử mua hàng</h1></section>
-@using (Html.BeginForm("MyOrder", "Order", FormMethod.Get, new { @class = "search-form compact-search" }))
-{ @Html.TextBox("searchTerm", (string)ViewBag.SearchTerm, new { @class = "form-control", placeholder = "Tìm mã đơn hoặc tên sản phẩm" })<button class="btn btn-primary" type="submit">Tìm đơn hàng</button> }
-@if (!Model.Any()) { <p class="empty-state">Chưa có đơn hàng phù hợp.</p> }
-@foreach (var order in Model)
+@model _25DH110603.Models.ViewModel.MyOrderVM
+@{ ViewBag.Title = "Đơn hàng của tôi"; }
+<section class="page-heading"><p class="eyebrow">TÀI KHOẢN</p><h1>Đơn hàng của tôi</h1></section>
+<nav class="order-status-tabs" aria-label="Lọc trạng thái đơn hàng">
+@{ var tabs = new[] { new { Key = "all", Label = "Tất cả" }, new { Key = "waiting", Label = "Chờ thanh toán" }, new { Key = "processing", Label = "Đang xử lý" }, new { Key = "shipping", Label = "Đang vận chuyển" }, new { Key = "delivered", Label = "Đã giao" }, new { Key = "cancelled", Label = "Đã hủy" } }; }
+@foreach (var tab in tabs)
 {
-    <article class="form-card order-history-card"><div class="order-history-heading"><div><span class="eyebrow">ĐƠN HÀNG #@order.OrderID</span><p>Ngày đặt @order.OrderDate.ToString("dd/MM/yyyy") · @order.PaymentStatus</p></div><strong>@order.TotalAmount.ToString("N0") ₫</strong></div>
-        <ul class="order-product-list">@foreach (var detail in order.OrderDetails) { <li>@detail.Product.ProductName <span>× @detail.Quantity</span></li> }</ul>
-        @Html.ActionLink("Xem chi tiết", "OrderSuccess", new { id = order.OrderID }, new { @class = "text-link" })
-    </article>
+    var tabClass = Model.StatusFilter == tab.Key ? "btn btn-primary" : "btn btn-outline-primary";
+    var tabUrl = Url.Action("MyOrder", "Order", new { searchTerm = Model.SearchTerm, status = tab.Key });
+    <a href="@tabUrl" class="@tabClass">@tab.Label</a>
+}
+</nav>
+@using (Html.BeginForm("MyOrder", "Order", FormMethod.Get, new { @class = "search-form compact-search" }))
+{
+    @Html.Hidden("status", Model.StatusFilter)
+    @Html.TextBox("searchTerm", Model.SearchTerm, new { @class = "form-control", placeholder = "Tìm mã đơn hoặc tên sản phẩm" })
+    <button class="btn btn-primary" type="submit">Tìm đơn hàng</button>
+}
+@if (TempData["OrderMessage"] != null) { <div class="alert alert-info">@TempData["OrderMessage"]</div> }
+@if (!Model.HasAnyOrders)
+{
+    <section class="empty-state"><p><strong>BẠN CHƯA CÓ ĐƠN HÀNG NÀO. HÃY ĐẶT ĐƠN NGAY.</strong></p>@Html.ActionLink("Đến trang chủ", "Index", "Home", null, new { @class = "btn btn-primary" })</section>
+}
+else if (!Model.Groups.Any())
+{
+    <p class="empty-state">Không tìm thấy đơn hàng phù hợp.</p>
+}
+@foreach (var group in Model.Groups)
+{
+    <section class="order-history-group">
+        <div class="order-history-heading"><h2>@group.StatusLabel</h2><span>@group.TotalCount đơn</span></div>
+        @foreach (var order in group.Orders)
+        {
+            <article class="form-card order-history-card">
+                <div class="order-history-heading"><div><span class="eyebrow">ĐƠN HÀNG #@order.OrderID</span><p>Ngày đặt @(order.OrderDate == System.DateTime.MinValue ? "Chưa có ngày đặt" : order.OrderDate.ToString("dd/MM/yyyy")) · @(order.PaymentStatus == "Pending" ? "Chưa thanh toán" : order.PaymentStatus == "Paid" ? "Đã thanh toán" : order.PaymentStatus) · @group.StatusLabel</p></div><strong>@order.TotalAmount.ToString("N0") ₫</strong></div>
+                <ul class="order-product-list">
+                @foreach (var detail in order.OrderDetails.Take(2))
+                {
+                    <li class="order-product-row">@if (!string.IsNullOrWhiteSpace(detail.Product.ProductImage)) { <img src="@Url.Content(detail.Product.ProductImage)" alt="@detail.Product.ProductName" style="width:64px;height:64px;object-fit:cover" /> }<span>@detail.Product.ProductName <small>× @detail.Quantity</small></span><strong>@detail.UnitPrice.ToString("N0") ₫</strong></li>
+                }
+                </ul>
+                @if (order.OrderDetails.Count() > 2)
+                {
+                    <details class="order-more-products"><summary>Xem thêm @(order.OrderDetails.Count() - 2) sản phẩm</summary>
+                        <ul class="order-product-list">@foreach (var detail in order.OrderDetails.Skip(2)) { <li class="order-product-row">@if (!string.IsNullOrWhiteSpace(detail.Product.ProductImage)) { <img src="@Url.Content(detail.Product.ProductImage)" alt="@detail.Product.ProductName" style="width:64px;height:64px;object-fit:cover" /> }<span>@detail.Product.ProductName <small>× @detail.Quantity</small></span><strong>@detail.UnitPrice.ToString("N0") ₫</strong></li> }</ul>
+                    </details>
+                }
+                <div class="order-card-actions">
+                    @if (order.OrderStatus == "Processing" && (order.PaymentStatus == "Pending" || order.PaymentStatus == "Chưa thanh toán"))
+                    {
+                        using (Html.BeginForm("Cancel", "Order", new { id = order.OrderID }, FormMethod.Post, new { @class = "d-inline" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?');">Hủy</button>
+                        }
+                    }
+                    @using (Html.BeginForm("Reorder", "Order", new { id = order.OrderID }, FormMethod.Post, new { @class = "d-inline" }))
+                    { @Html.AntiForgeryToken()<button type="submit" class="btn btn-primary">Mua lại</button> }
+                    @Html.ActionLink("Xem chi tiết", "Details", new { id = order.OrderID }, new { @class = "btn btn-outline-primary" })
+                </div>
+            </article>
+        }
+        @if (group.TotalCount > 2 && !group.IsExpanded)
+        {
+            @Html.ActionLink("Xem thêm", "MyOrder", new { searchTerm = Model.SearchTerm, status = Model.StatusFilter, expandedStatus = group.StatusKey }, new { @class = "btn btn-outline-secondary" })
+        }
+        else if (group.IsExpanded && group.TotalCount > 50)
+        {
+            <p>Đang hiển thị 50 đơn hàng mới nhất.</p>
+        }
+    </section>
 }

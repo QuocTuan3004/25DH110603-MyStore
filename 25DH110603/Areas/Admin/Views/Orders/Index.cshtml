@@ -1,4 +1,15 @@
 @model IEnumerable<_25DH110603.Models.Order>
 @{ ViewBag.Title = "Đơn hàng"; Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; }
-<h2>Danh sách đơn hàng</h2>
+<h2>Quản lý đơn hàng</h2>
+@using (Html.BeginForm("Index", "Orders", FormMethod.Get, new { @class = "form-inline mb-3" }))
+{
+    <div class="form-group mr-2"><label for="customerName">Khách hàng</label>@Html.TextBox("customerName", (string)ViewBag.CustomerName, new { @class = "form-control ml-2", placeholder = "Tên khách hàng" })</div>
+    <div class="form-group mr-2"><label for="paymentStatus">Thanh toán</label><select id="paymentStatus" name="paymentStatus" class="form-control ml-2"><option value="">Tất cả</option><option value="Pending" @(ViewBag.PaymentStatus == "Pending" ? "selected" : "")>Chưa thanh toán</option><option value="Paid" @(ViewBag.PaymentStatus == "Paid" ? "selected" : "")>Đã thanh toán</option></select></div>
+    <div class="form-group mr-2"><label for="orderDate">Ngày đặt</label><input id="orderDate" name="orderDate" type="date" class="form-control ml-2" value="@ViewBag.OrderDate" /></div>
+    <button class="btn btn-primary" type="submit">Lọc</button>
+}
+<p>@ViewBag.TotalOrders đơn hàng</p>
 @Html.Partial("_PVListOrders", Model)
+<nav aria-label="Phân trang đơn hàng"><ul class="pagination">
+@for (var i = 1; i <= (int)ViewBag.TotalPages; i++) { <li class="page-item @(i == (int)ViewBag.Page ? "active" : "")">@Html.ActionLink(i.ToString(), "Index", new { customerName = ViewBag.CustomerName, paymentStatus = ViewBag.PaymentStatus, orderDate = ViewBag.OrderDate, page = i }, new { @class = "page-link" })</li> }
+</ul></nav>

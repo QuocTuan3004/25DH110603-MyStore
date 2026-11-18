@@ -47,6 +47,7 @@ namespace _25DH110603.Controllers
             }
             FormsAuthentication.SetAuthCookie(user.Username, model.RememberMe);
             if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
+            if (user.UserRole == "A") return RedirectToAction("Index", "Products", new { area = "Admin" });
             return RedirectToAction("Index", "Home");
         }
 

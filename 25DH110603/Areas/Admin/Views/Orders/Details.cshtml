@@ -1,7 +1,25 @@
 @model _25DH110603.Models.Order
 @{ ViewBag.Title = "Chi tiết đơn hàng"; Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; }
 <h2>Hóa đơn đơn hàng #@Model.OrderID</h2>
-<section class="card p-3 mb-3"><div>Khách hàng: @Model.Customer.CustomerName</div><div>Ngày đặt: @Model.OrderDate.ToString("dd/MM/yyyy")</div><div>Địa chỉ giao hàng: @Model.ShippingAddress</div><div>Giao hàng: @Model.DeliveryMethod</div><div>Thanh toán: @Model.PaymentMethod · @Model.PaymentStatus</div></section>
-@Html.Partial("~/Views/Order/_PVOrderDetailList.cshtml", Model.OrderDetails)
+@if (TempData["Message"] != null) { <div class="alert alert-success">@TempData["Message"]</div> }
+<section class="card p-3 mb-3">
+    <div>Khách hàng: @Model.Customer.CustomerName</div><div>Ngày đặt: @(Model.OrderDate == System.DateTime.MinValue ? "Chưa có ngày đặt" : Model.OrderDate.ToString("dd/MM/yyyy"))</div><div>Địa chỉ giao hàng: @Model.ShippingAddress</div><div>Giao hàng: @Model.DeliveryMethod</div><div>Thanh toán: @Model.PaymentMethod · @(Model.PaymentStatus == "Pending" ? "Chưa thanh toán" : Model.PaymentStatus == "Paid" ? "Đã thanh toán" : Model.PaymentStatus)</div>
+    <div>Trạng thái đơn: @(Model.OrderStatus == "Shipping" ? "Đang giao" : Model.OrderStatus == "Delivered" ? "Đã giao" : Model.OrderStatus == "Cancelled" ? "Đã hủy" : "Đang xử lý")</div>
+</section>
+<table class="table table-bordered"><thead><tr><th>Ảnh</th><th>Sản phẩm</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead><tbody>
+@foreach (var detail in Model.OrderDetails) { <tr><td>@if (!string.IsNullOrWhiteSpace(detail.Product.ProductImage)) { <img src="@Url.Content(detail.Product.ProductImage)" alt="@detail.Product.ProductName" style="width:72px;height:72px;object-fit:cover" /> }</td><td>@detail.Product.ProductName</td><td>@detail.Quantity</td><td>@detail.UnitPrice.ToString("N0") ₫</td><td>@((detail.UnitPrice * detail.Quantity).ToString("N0")) ₫</td></tr> }
+</tbody></table>
 <p class="text-end"><strong>Tổng thanh toán: @Model.TotalAmount.ToString("N0") ₫</strong></p>
-@Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+@using (Html.BeginForm("UpdateStatus", "Orders", new { area = "Admin", id = Model.OrderID }, FormMethod.Post, null))
+{
+    @Html.AntiForgeryToken()
+    <label for="orderStatus">Cập nhật trạng thái</label>
+    <select id="orderStatus" name="orderStatus" class="form-control mb-2" style="max-width:280px">
+        <option value="Processing" @(Model.OrderStatus == "Processing" ? "selected" : "")>Đang xử lý</option>
+        <option value="Shipping" @(Model.OrderStatus == "Shipping" ? "selected" : "")>Đang giao</option>
+        <option value="Delivered" @(Model.OrderStatus == "Delivered" ? "selected" : "")>Đã giao</option>
+        <option value="Cancelled" @(Model.OrderStatus == "Cancelled" ? "selected" : "")>Đã hủy</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Cập nhật trạng thái</button>
+}
+@Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary mt-2" })

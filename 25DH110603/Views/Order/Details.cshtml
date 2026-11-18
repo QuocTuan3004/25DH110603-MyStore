@@ -1,0 +1,25 @@
+@model _25DH110603.Models.Order
+@{ ViewBag.Title = "Chi tiết đơn hàng"; }
+<section class="page-heading"><p class="eyebrow">LỊCH SỬ MUA HÀNG</p><h1>Chi tiết đơn hàng #@Model.OrderID</h1></section>
+<section class="form-card order-detail-card">
+    <h2>Thông tin đơn hàng</h2>
+    <div class="order-meta">
+        <span>Ngày đặt: @(Model.OrderDate == System.DateTime.MinValue ? "Chưa có ngày đặt" : Model.OrderDate.ToString("dd/MM/yyyy"))</span>
+        <span>Tên khách hàng: @Model.Customer.CustomerName</span>
+        <span>Tổng giá trị: @Model.TotalAmount.ToString("N0") ₫</span>
+        <span>Phương thức thanh toán: @Model.PaymentMethod</span>
+        <span>Trạng thái thanh toán: @(Model.PaymentStatus == "Pending" ? "Chưa thanh toán" : Model.PaymentStatus == "Paid" ? "Đã thanh toán" : Model.PaymentStatus)</span>
+        <span>Trạng thái đơn hàng: @(Model.OrderStatus == "Shipping" ? "Đang vận chuyển" : Model.OrderStatus == "Delivered" ? "Đã giao" : Model.OrderStatus == "Cancelled" ? "Đã hủy" : "Đang xử lý")</span>
+        <span>Phương thức giao hàng: @Model.DeliveryMethod</span>
+        <span>Địa chỉ giao hàng: @Model.ShippingAddress</span>
+    </div>
+    <h2>Sản phẩm</h2>
+    <div class="table-responsive"><table class="table order-detail-table"><thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead><tbody>
+    @foreach (var detail in Model.OrderDetails)
+    {
+        <tr><td>@if (detail.Product != null && !string.IsNullOrWhiteSpace(detail.Product.ProductImage)) { <img src="@Url.Content(detail.Product.ProductImage)" alt="@detail.Product.ProductName" style="width:72px;height:88px;object-fit:cover;margin-right:12px" /> }@(detail.Product == null ? "Sản phẩm không còn khả dụng" : detail.Product.ProductName)</td><td>@detail.Quantity</td><td>@detail.UnitPrice.ToString("N0") ₫</td><td>@((detail.UnitPrice * detail.Quantity).ToString("N0")) ₫</td></tr>
+    }
+    </tbody></table></div>
+    <div class="summary-row summary-total"><span>Tổng thanh toán</span><strong>@Model.TotalAmount.ToString("N0") ₫</strong></div>
+    @Html.ActionLink("Quay lại đơn hàng của tôi", "MyOrder", null, new { @class = "btn btn-outline-primary" })
+</section>

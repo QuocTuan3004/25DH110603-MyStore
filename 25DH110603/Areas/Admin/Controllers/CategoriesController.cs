@@ -10,6 +10,7 @@ using _25DH110603.Models;
 
 namespace _25DH110603.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class CategoriesController : Controller
     {
         private MyStoreEntities db = new MyStoreEntities();

@@ -32,6 +32,7 @@
           <Property Name="OrderDate" Type="date" Nullable="false" />
           <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="PaymentStatus" Type="nvarchar(max)" />
+          <Property Name="OrderStatus" Type="nvarchar" MaxLength="50" />
           <Property Name="ShippingAddress" Type="nvarchar(max)" Nullable="false" /><Property Name="DeliveryMethod" Type="nvarchar" Nullable="false" MaxLength="50" /><Property Name="PaymentMethod" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="OrderDetail">
@@ -197,6 +198,7 @@
           <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="PaymentStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ShippingAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" /><Property Name="DeliveryMethod" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" /><Property Name="PaymentMethod" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Customer" Relationship="Self.FK__Order__CustomerI__5441852A" FromRole="Order" ToRole="Customer" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__Order__5812160E" FromRole="Order" ToRole="OrderDetail" />
@@ -369,6 +371,7 @@
                 <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
                 <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
                 <ScalarProperty Name="PaymentStatus" ColumnName="PaymentStatus" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
                 
               <ScalarProperty Name="ShippingAddress" ColumnName="ShippingAddress" /><ScalarProperty Name="DeliveryMethod" ColumnName="DeliveryMethod" /><ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" /></MappingFragment>
             </EntityTypeMapping>

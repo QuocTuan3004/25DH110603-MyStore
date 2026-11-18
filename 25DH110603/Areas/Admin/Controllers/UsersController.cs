@@ -5,7 +5,7 @@ using _25DH110603.Models;
 using _25DH110603.Models.ViewModel;
 namespace _25DH110603.Areas.Admin.Controllers
 {
-    [Authorize]
+    [AdminAuthorize]
     public class UsersController : Controller
     {
         private readonly MyStoreEntities db = new MyStoreEntities();

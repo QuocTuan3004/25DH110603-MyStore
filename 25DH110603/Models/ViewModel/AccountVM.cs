@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using _25DH110603.Models;
 
 namespace _25DH110603.Models.ViewModel
 {
@@ -51,6 +53,24 @@ namespace _25DH110603.Models.ViewModel
         public string NewPassword { get; set; }
         [Required, Compare("NewPassword"), DataType(DataType.Password), Display(Name = "Xác nhận mật khẩu mới")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class MyOrderVM
+    {
+        public string SearchTerm { get; set; }
+        public string StatusFilter { get; set; }
+        public string ExpandedStatus { get; set; }
+        public bool HasAnyOrders { get; set; }
+        public List<MyOrderGroupVM> Groups { get; set; }
+    }
+
+    public class MyOrderGroupVM
+    {
+        public string StatusKey { get; set; }
+        public string StatusLabel { get; set; }
+        public int TotalCount { get; set; }
+        public bool IsExpanded { get; set; }
+        public List<Order> Orders { get; set; }
     }
 
     public class CheckoutVM
